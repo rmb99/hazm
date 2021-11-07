@@ -163,26 +163,30 @@ class Normalizer(object):
 		>>> normalizer.token_spacing(['زمین', 'لرزه', 'ای'])
 		['زمین‌لرزه‌ای']
 		"""
-
 		result = []
-		for t, token in enumerate(tokens):
+		index = 0
+		while (index <= len(tokens)):
 			joined = False
-
-			if result:
-				token_pair = result[-1]+'‌'+token
-				if token_pair in self.verbs or token_pair in self.words and self.words[token_pair][0] > 0:
-					joined = True
-
-					if t < len(tokens)-1 and token+'_'+tokens[t+1] in self.verbs:
-						joined = False
-
-				elif token in self.suffixes and result[-1] in self.words:
-					joined = True
+			window_size = 5
+			for window in reversed(range(window_size)):
+				if index + window <= len(tokens):
+					batch_with_half_space = '‌'.join(
+						tokens[index: index + window + 1])
+					batch_without_space = ''.join(
+						tokens[index: index + window + 1])
+					if batch_with_half_space in self.words or batch_with_half_space in self.verbs or batch_without_space in self.words or batch_without_space in self.verbs:
+						joined = True
+						index += window + 1
+						break
+						if index < len(tokens) - 1 and tokens[index] + '_' + tokens[index + 1] in self.verbs:
+							joined = False
+					elif tokens[index] in self.suffixes and result[-1] in self.words:
+						joined = True
 
 			if joined:
-				result.pop()
-				result.append(token_pair)
+
+				result.append(batch_with_half_space)
 			else:
-				result.append(token)
+				result.append(tokens[index])
 
 		return result
