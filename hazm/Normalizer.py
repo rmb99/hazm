@@ -164,29 +164,28 @@ class Normalizer(object):
 		['زمین‌لرزه‌ای']
 		"""
 		result = []
-		index = 0
-		while (index <= len(tokens)):
-			joined = False
-			window_size = 5
-			for window in reversed(range(window_size)):
-				if index + window <= len(tokens):
-					batch_with_half_space = '‌'.join(
-						tokens[index: index + window + 1])
-					batch_without_space = ''.join(
-						tokens[index: index + window + 1])
-					if batch_with_half_space in self.words or batch_with_half_space in self.verbs or batch_without_space in self.words or batch_without_space in self.verbs:
-						joined = True
-						index += window + 1
-						break
-						if index < len(tokens) - 1 and tokens[index] + '_' + tokens[index + 1] in self.verbs:
-							joined = False
-					elif tokens[index] in self.suffixes and result[-1] in self.words:
-						joined = True
+        index = 0
+        while index < len(tokens):
+            joined = False
+            window_size = 5
+            for window in reversed(range(window_size)):
+                if index + window <= len(tokens):
+                    batch_with_half_space = '‌'.join(tokens[index: index + window + 1])
+                    batch_without_space = ''.join(tokens[index: index + window + 1])
+                    if batch_with_half_space in self.words or \
+                            batch_with_half_space in self.verbs or \
+                            batch_without_space in self.words or \
+                            batch_without_space in self.verbs:
+                        joined = True
+                        index += window + 1
+                        break
+                    elif tokens[index] in self.suffixes and result[-1] in self.words:
+                        joined = True
 
-			if joined:
-
-				result.append(batch_with_half_space)
-			else:
-				result.append(tokens[index])
+            if joined:
+                result.append(batch_with_half_space)
+            else:
+                result.append(tokens[index])
+                index += 1
 
 		return result
