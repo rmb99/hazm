@@ -188,5 +188,6 @@ class Normalizer(object):
 				result.append(batch_with_half_space)
 			else:
 				result.append(tokens[index])
+			index += 1
 
 		return result
