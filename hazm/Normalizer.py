@@ -179,8 +179,10 @@ class Normalizer(object):
 						joined = True
 						index += window + 1
 						break
-					elif tokens[index] in self.suffixes and result[-1] in self.words:
+					elif window==2 and tokens[index+1] in self.suffixes and tokens[index] in self.words:
 						joined = True
+						batch_with_half_space = tokens[index] +'‌'+tokens[index+1]
+						break
 
 			if joined:
 				result.append(batch_with_half_space)
