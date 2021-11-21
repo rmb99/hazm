@@ -182,6 +182,7 @@ class Normalizer(object):
 					elif window==2 and tokens[index+1] in self.suffixes and tokens[index] in self.words:
 						joined = True
 						batch_with_half_space = tokens[index] +'‌'+tokens[index+1]
+						index += window + 1
 						break
 
 			if joined:
